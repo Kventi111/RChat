@@ -31,3 +31,83 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+.item {
+  display: flex;
+  padding: 12px;
+  transition: all .2s;
+  cursor: pointer;
+}
+
+.item:hover {
+  background: #f5f7fa;
+}
+
+
+.item:last-child {
+  margin: 0;
+}
+
+.content {
+  width: 100%;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  padding: 0 10px 0 0;
+}
+
+.avatar__img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: gray;
+}
+
+.title {
+  display: flex;
+}
+
+.title .name {
+  font-size: 16px;
+  margin: 3px 0;
+  font-weight: bold;
+}
+
+.title .last_update {
+  width: 100%;
+  font-size: 14px;
+  color: rgba(0,0,0,.50);
+  align-self: center;
+  text-align: right;
+}
+
+.subtitle {
+  display: flex;
+}
+
+.subtitle .message {
+  font-size: 14px;
+  color: rgba(0,0,0,.64);
+}
+
+.subtitle .notify {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.subtitle .notify .count {
+  background-color: #e84747;
+  font-size: 14px;
+  height: 20px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  border-radius: 10px;
+}

@@ -29,11 +29,12 @@ const { TextArea, Search } = Input;
 const url = 'https://images.unsplash.com/photo-1563494270-4e133aea0ede?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=582&q=80'
 
 
-function EmptyState({text}) {
+function EmptyState({text,subtitle}) {
   const style ={
     display : "flex",
     justifyContent : 'center',
     alignItems : 'center',
+    flexDirection : 'column',
     height : "100%",
     width: "100%",
     backgroundColor : '#b1afaf1a'
@@ -42,10 +43,8 @@ function EmptyState({text}) {
   return (
     <div style={style}>
       {text}
-      <sadFrank style={{
-        height : '10px',
-        width : '10px',
-      }} />
+      {subtitle && <small>{subtitle}</small>}
+      <img src={sadFrank} className="sanFrank" alt={'icon'} />
     </div>
   )
 } 
@@ -126,7 +125,7 @@ class App extends React.Component {
                   badgeCount={3}
                   onClick={() => console.log(item._id)}
                 />
-              )) : <EmptyState text={"test"} />}
+              )) : <EmptyState text={"Создайте диалог"} subtitle={'не злите фрэнка :)'} />}
             </DialogList>
             <DialogWindow>
               <DialogMessages>

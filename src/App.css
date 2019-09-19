@@ -111,3 +111,68 @@
   color: #fff;
   border-radius: 10px;
 }
+
+.table {
+  display: flex;
+  border: 1px solid;
+}
+
+.multiplier__col {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.result__col {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.cell {
+  font-size: 18px;
+  padding: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cell:hover {
+  background: rgba(0,0,0,.1);
+}
+
+
+.Tableform {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 500px;
+}
+
+.fields__wrapper {
+  display: flex;
+}
+
+.Tableform__field {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 50%;
+  padding: 5px;
+}
+
+.button__wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.button__wrapper .Tableform__field {
+  justify-content: center;
+  width: auto;
+}
+
+.Tableform__input {
+  width: 100%;
+}

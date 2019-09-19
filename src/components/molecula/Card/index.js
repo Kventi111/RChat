@@ -43,9 +43,10 @@ const Card = ({
   userName,
   lastUpdate,
   lastMessage,
-  badgeCount
+  badgeCount,
+  onClick
 }) => (
-  <Wrapper>
+  <Wrapper onClick={onClick}>
     <Avatar>
       <Img 
         imgUrl={imgSrc}

@@ -1,7 +1,9 @@
 const initState = {
   mount : false,
   loading  : true,
-  userInfo : {}
+  userInfo : {},
+  dialogList : [],
+  messageList : []
 }
 
 const appReducer = (state = initState, action) => {
@@ -22,6 +24,11 @@ const appReducer = (state = initState, action) => {
       return {
         ...state,
         dialogList : payload
+      }
+    case "FETCH_MESSAGES_SUCCESS":
+      return {
+        ...state,
+        messageList : payload
       }
     default:
       return state

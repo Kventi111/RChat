@@ -4,9 +4,12 @@ import ReactDOM from 'react-dom'
 
 import { Input,Button } from 'antd';
 import { Card, Section, Message, DialogHeader } from './components'
+
 import * as actions from './actions/application'
 import * as userActions from './actions/userAction'
 import * as dialogsActions from './actions/dialogActions'
+import * as messagesActions from './actions/messageActions'
+
 import { API } from './api'
 import sadFrank from './icons/sadFrank.svg'
 
@@ -42,7 +45,7 @@ function EmptyState({text,subtitle}) {
 
   return (
     <div style={style}>
-      {text}
+      <p className="emptyStateTitle"> {text} </p>
       {subtitle && <small>{subtitle}</small>}
       <img src={sadFrank} className="sanFrank" alt={'icon'} />
     </div>
@@ -62,7 +65,9 @@ class App extends React.Component {
     this.getDialogs()
 
     const findText = ReactDOM.findDOMNode(this.textArea.current)
-    findText.addEventListener('keypress',this.getTextAreaValue)
+    if (findText) {
+      findText.addEventListener('keypress',this.getTextAreaValue)
+    }
   }
 
   getUserInfo = async () => {
@@ -78,6 +83,15 @@ class App extends React.Component {
   componentWillUnmount() {
     const findText = ReactDOM.findDOMNode(this.textArea.current)
     findText.removeEventListener('keypress',this.getTextAreaValue)
+  }
+
+
+  fetchMessagesById = async id => {
+    let response;
+    if (id) {
+      response = await API.MESSAGES.getMessages(id)
+      this.props.fetchMessages(response)
+    }
   }
 
   getTextAreaValue = e => {
@@ -96,7 +110,9 @@ class App extends React.Component {
   }
 
   render() {
-    const {loading, userInfo, dialogList} = this.props.Application;    
+    const {loading, userInfo, dialogList, messageList} = this.props.Application;    
+
+    console.log(userInfo)
     return (
       <Wrapper>
         <Content>
@@ -110,12 +126,12 @@ class App extends React.Component {
               </SearchWrapper>
             </Section>
             <Section>
-              <DialogHeader />
+              {false && <DialogHeader />}
             </Section>
           </Header>
           <DialogWrapper>
             <DialogList>
-              {dialogList ? dialogList.map(item => (
+              {dialogList.length ? dialogList.map(item => (
                 <Card 
                   key={item._id}
                   imgSrc={url}
@@ -123,25 +139,35 @@ class App extends React.Component {
                   lastUpdate={'14:00'}
                   lastMessage={item.lastMessage.text}
                   badgeCount={3}
-                  onClick={() => console.log(item._id)}
+                  onClick={() => this.fetchMessagesById(item._id)}
                 />
               )) : <EmptyState text={"Создайте диалог"} subtitle={'не злите фрэнка :)'} />}
             </DialogList>
             <DialogWindow>
-              <DialogMessages>
-                {Array.from({ length: 50 }, (v, k) => k).map(item => (
-                  <Message key={item} me={item % 2 === 0}>
-                    {item}
-                  </Message>
-                ))}
-              </DialogMessages>
-              <DialogWindowControl>
-                <TextArea 
-                  ref={this.textArea}
-                  placeholder="Напишите сообщение.." 
-                  autosize={{ minRows: 1, maxRows: 5 }} 
-                />
-              </DialogWindowControl>
+              {messageList.length 
+               ?  
+               <React.Fragment>
+                  <DialogMessages>
+                      {/* {Array.from({ length: 50 }, (v, k) => k).map(item => (
+                        <Message key={item} me={item % 2 === 0}>
+                          {item}
+                        </Message>
+                      ))} */}
+                      {messageList.map(item => (
+                        <Message key={item._id} me={userInfo._id === item.user}>
+                          {item.text}
+                        </Message>
+                      ))}
+                    </DialogMessages>
+                  <DialogWindowControl>
+                  <TextArea 
+                    ref={this.textArea}
+                    placeholder="Напишите сообщение.." 
+                    autosize={{ minRows: 1, maxRows: 5 }} 
+                  />
+                  </DialogWindowControl>
+                </React.Fragment>
+               : <EmptyState text={"Выбери диалог"} subtitle={'фрэнк думает, что ты интроверт :)'} />}
             </DialogWindow>
           </DialogWrapper>
         </Content>
@@ -155,7 +181,8 @@ const mapStateToProps = state => ({ ...state })
 const mapDispatchToProps = {
   ...actions,
   ...userActions,
-  ...dialogsActions
+  ...dialogsActions,
+  ...messagesActions
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(App);

@@ -140,7 +140,7 @@ class App extends React.Component {
   render() {
     const {loading, userInfo, dialogList, messageList} = this.props.Application;    
 
-    return (
+    return ( 
       <Wrapper>
         <Content>
           <Header>
@@ -181,7 +181,7 @@ class App extends React.Component {
                         </Message>
                       ))} */}
                       {messageList.map(item => (
-                        <Message key={item._id} me={!userInfo._id === item.user}>
+                        <Message key={item._id} me={userInfo._id === item.user}>
                           {item.text}
                         </Message>
                       ))}

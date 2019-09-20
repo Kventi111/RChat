@@ -1,12 +1,17 @@
 const baseUrl = 'http://localhost:3333'
 
-export async function baseRequest(url,method) {
+export async function baseRequest(url,method,responseData) {
   const token  = window.localStorage.getItem('authToken')
-  const options = {
+  let options = {
     method,
     headers : {
-      token
-    }
+      'Content-Type': 'application/json',
+      token,
+    },
+  }
+
+  if (method === "POST") {
+    options.body = JSON.stringify(responseData)
   }
   let data;
 

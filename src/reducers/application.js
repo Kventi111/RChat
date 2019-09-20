@@ -30,6 +30,14 @@ const appReducer = (state = initState, action) => {
         ...state,
         messageList : payload
       }
+    case "UPDATE_MESSAGES":
+      return {
+        ...state,
+        messageList : [
+          ...state.messageList,
+          payload
+        ]
+      }
     default:
       return state
   }

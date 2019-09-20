@@ -13,6 +13,9 @@ import * as messagesActions from './actions/messageActions'
 import { API } from './api'
 import sadFrank from './icons/sadFrank.svg'
 
+import openSocket from 'socket.io-client';
+
+
 import {
   Wrapper,
   Content,
@@ -27,6 +30,8 @@ import {
 } from './style'
 
 import './App.css'
+
+const socket = openSocket('http://localhost:3333');
 
 const { TextArea, Search } = Input;
 const url = 'https://images.unsplash.com/photo-1563494270-4e133aea0ede?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=582&q=80'
@@ -55,19 +60,25 @@ function EmptyState({text,subtitle}) {
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.textArea = React.createRef()
+    this.state = {
+      messageText : '',
+      currentDialogId :  ''
+    }
   }
 
   componentDidMount() {
     this.props.mount()
 
+    socket.on("DIALOGS:SUCCESS", socket => console.log(socket));
+    socket.on("NEW:MESSAGE", this.updateMessages);
+
     this.getUserInfo()
     this.getDialogs()
+  }
 
-    const findText = ReactDOM.findDOMNode(this.textArea.current)
-    if (findText) {
-      findText.addEventListener('keypress',this.getTextAreaValue)
-    }
+  updateMessages = message => {
+    console.log(message)
+    this.props.updateMessages(message)
   }
 
   getUserInfo = async () => {
@@ -81,12 +92,19 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
-    const findText = ReactDOM.findDOMNode(this.textArea.current)
-    findText.removeEventListener('keypress',this.getTextAreaValue)
+
+    socket.removeListener("DIALOGS:SUCCESS", () => console.log('test'));
+    socket.removeListener("NEW:MESSAGE", socket => console.log(socket));
   }
 
 
   fetchMessagesById = async id => {
+    this.setState({
+      currentDialogId : id
+    })
+
+    socket.emit("DIALOGS:JOIN", id);
+
     let response;
     if (id) {
       response = await API.MESSAGES.getMessages(id)
@@ -95,24 +113,33 @@ class App extends React.Component {
   }
 
   getTextAreaValue = e => {
-    let value;
-    if (e.keyCode === 13 && !e.shiftKey) {
-      e.preventDefault()
-      value = e.target.value
+    const {value} = e.target
+
+    if(value.trim().length) {
+      this.setState({
+        messageText : value,
+       })
+    }
+  }
+
+  sendMessage = async () => {
+    if (this.state.messageText) {
+      socket.emit("MESSAGE",this.state.messageText)
     }
 
-    console.log(value)
-    return value
+    const data = {
+      dialog : this.state.currentDialogId,
+      text : this.state.messageText
+    }
+
+
+    await API.MESSAGES.sendMessage(data)
   }
 
-  test = () => {
-    console.log('11')
-  }
 
   render() {
     const {loading, userInfo, dialogList, messageList} = this.props.Application;    
 
-    console.log(userInfo)
     return (
       <Wrapper>
         <Content>
@@ -154,17 +181,18 @@ class App extends React.Component {
                         </Message>
                       ))} */}
                       {messageList.map(item => (
-                        <Message key={item._id} me={userInfo._id === item.user}>
+                        <Message key={item._id} me={!userInfo._id === item.user}>
                           {item.text}
                         </Message>
                       ))}
                     </DialogMessages>
                   <DialogWindowControl>
-                  <TextArea 
-                    ref={this.textArea}
-                    placeholder="Напишите сообщение.." 
-                    autosize={{ minRows: 1, maxRows: 5 }} 
-                  />
+                    <input 
+                      ref={this.textArea}
+                      placeholder="Напишите сообщение.." 
+                      onChange={e => this.getTextAreaValue(e)}
+                    />
+                    <input type="submit" onClick={this.sendMessage} />
                   </DialogWindowControl>
                 </React.Fragment>
                : <EmptyState text={"Выбери диалог"} subtitle={'фрэнк думает, что ты интроверт :)'} />}

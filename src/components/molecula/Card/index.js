@@ -64,7 +64,7 @@ const Card = ({
       <Section>
         <MessageAndBadge>
           <Paragraph>{lastMessage}</Paragraph>
-          <Badge>{badgeCount}</Badge>
+          {badgeCount && <Badge>{badgeCount}</Badge>}
         </MessageAndBadge>
       </Section>
     </Content>

@@ -31,7 +31,7 @@ import {
 
 import './App.css'
 
-const socket = openSocket('http://localhost:3333');
+const socket = openSocket('https://immense-everglades-27398.herokuapp.com');
 
 const { TextArea, Search } = Input;
 const url = 'https://images.unsplash.com/photo-1563494270-4e133aea0ede?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=582&q=80'
@@ -165,7 +165,6 @@ class App extends React.Component {
                   userName={item.partner.fullname}
                   lastUpdate={'14:00'}
                   lastMessage={item.lastMessage.text}
-                  badgeCount={3}
                   onClick={() => this.fetchMessagesById(item._id)}
                 />
               )) : <EmptyState text={"Создайте диалог"} subtitle={'не злите фрэнка :)'} />}

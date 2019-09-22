@@ -60,6 +60,9 @@ function EmptyState({text,subtitle}) {
 class App extends React.Component {
   constructor(props) {
     super(props)
+
+    this.myRef = React.createRef();
+
     this.state = {
       messageText : '',
       currentDialogId :  null,
@@ -118,6 +121,16 @@ class App extends React.Component {
       response = await API.MESSAGES.getMessages(id)
       this.props.fetchMessages(response)
     }
+
+    setTimeout(() => {
+      const messagesList = this.myRef.current;
+
+      messagesList.scrollTo({
+        top :  999999999,
+        left : 0,
+        behavior: 'smooth'
+      })
+    },100)
   }
 
   getTextAreaValue = e => {
@@ -131,6 +144,8 @@ class App extends React.Component {
   }
 
   sendMessage = async () => {
+    const messagesList = this.myRef.current;
+
     if (this.state.messageText) {
       socket.emit("MESSAGE",this.state.messageText)
     }
@@ -142,6 +157,12 @@ class App extends React.Component {
 
 
     await API.MESSAGES.sendMessage(data)
+
+    messagesList.scrollTo({
+      top :  999999999,
+      left : 0,
+      behavior: 'smooth'
+    });
   }
 
 
@@ -182,7 +203,7 @@ class App extends React.Component {
               {messageList.length 
                ?  
                <React.Fragment>
-                  <DialogMessages>
+                  <DialogMessages ref={this.myRef}>
                       {/* {Array.from({ length: 50 }, (v, k) => k).map(item => (
                         <Message key={item} me={item % 2 === 0}>
                           {item}

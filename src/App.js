@@ -62,7 +62,8 @@ class App extends React.Component {
     super(props)
     this.state = {
       messageText : '',
-      currentDialogId :  ''
+      currentDialogId :  null,
+      currentDialogUser : null 
     }
   }
 
@@ -99,8 +100,15 @@ class App extends React.Component {
 
 
   fetchMessagesById = async id => {
+    const {dialogList} = this.props.Application;
+
+
+    const currrentUser = dialogList.find(i => i._id === id)
+
+
     this.setState({
-      currentDialogId : id
+      currentDialogId : id,
+      currentDialogUser : currrentUser.partner
     })
 
     socket.emit("DIALOGS:JOIN", id);
@@ -139,6 +147,7 @@ class App extends React.Component {
 
   render() {
     const {loading, userInfo, dialogList, messageList} = this.props.Application;    
+    const { currentDialogUser } = this.state
 
     return ( 
       <Wrapper>
@@ -153,7 +162,7 @@ class App extends React.Component {
               </SearchWrapper>
             </Section>
             <Section>
-              {false && <DialogHeader />}
+              {currentDialogUser && <DialogHeader userInfo={currentDialogUser} />}
             </Section>
           </Header>
           <DialogWrapper>

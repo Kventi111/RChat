@@ -13,7 +13,7 @@ const Avatar = styled.div`
   align-items: center;
 `;
 
-const DialogHeader = ({ userName,messageStatut }) => (
+const DialogHeader = ({userInfo}) => (
   <Section>
     <Wrapper>
       <Section width={15}>
@@ -21,11 +21,11 @@ const DialogHeader = ({ userName,messageStatut }) => (
           <Img circle size={50} imgUrl={'https://images.unsplash.com/photo-1567653418876-5bb0e566e1c2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80'} /> 
         </Avatar>       
       </Section>
-      <Section width={85  }>
-        <Title>123</Title>
+      <Section width={85}>
+        <Title>{userInfo.fullname}</Title>
         <Paragraph> typing... </Paragraph>
       </Section>
-    </Wrapper>
+    </Wrapper>  
   </Section>
 )
 

@@ -1,0 +1,15 @@
+
+
+.form__title {
+  font-size: 25px;
+  text-transform: uppercase;
+}
+
+
+.login-form-button {
+  width: 100%;
+}
+
+.loginForm {
+  width: 300px;
+}

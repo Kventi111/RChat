@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
 
-import { LoginForm, RegisterForm } from '../../components';
+import { LoginForm, RegisterForm } from 'components';
+
+import {
+  Form,
+  Footer,
+  Text,
+  Link
+} from './style'
 
 export default class AuthPage extends Component {
   constructor(props) {
@@ -12,35 +19,31 @@ export default class AuthPage extends Component {
   }
 
   toggleLoginState = () => {
-    this.setState({ isLogin : !this.stata.isLogin })
+    this.setState({ isLogin : !this.state.isLogin })
   }
 
   render() {
-
     const {isLogin} = this.state
+
     return (
-      <div>
+      <Form>
         {isLogin && <LoginForm />}
         {!isLogin && <RegisterForm />}
-        <hr/>
-  
-        {isLogin && 
-          <div onClick={this.toggleLoginState}>
-            <small>У тебя нет ??</small>
-            <small>Тогда немедленно зарегистрируйся !!!</small>
-          </div> 
-        }
-  
-        {!isLogin && 
-          <div onClick={this.toggleLoginState}>
-            <small>У тебя уже есть логин ??</small>
-            <small>Тогда хули ты тут делаешь пиздуй отсюда !!!</small>
-            <small>И зайди в меня, то есть в приложение грязный извращенец(ка)</small>
-          </div> 
-        }
-  
-       
-      </div> 
+      
+        <Footer>
+          {isLogin ? 
+              <React.Fragment>
+                <Text>или</Text> 
+                <Link onClick={this.toggleLoginState}>Зарегистрируйся сейчас</Link>
+              </React.Fragment>
+            : 
+            <React.Fragment>s
+              <Text>или</Text> 
+              <Link onClick={this.toggleLoginState}>Войти в приложение</Link>
+            </React.Fragment>
+          }
+        </Footer>
+      </Form> 
     )
   }
 }

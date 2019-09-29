@@ -1,7 +1,9 @@
 import React from 'react';
+import { Form, Icon, Input, Button } from 'antd';
 
-import { API } from '../../../api'
+import { API } from 'api'
 
+import './style.css'
 
 class LoginForm extends React.Component {
     constructor(props) {
@@ -49,26 +51,43 @@ class LoginForm extends React.Component {
     render() {
       const {login,password,serverMessage} = this.state;
       return (
-        <div>
-          <span style={{ color : serverMessage.status === "success" ? 'green' : 'red' }}>{serverMessage.text}</span> 
-          <br />
-          <br />
-          <label htmlFor="login">login</label><br/>
-          <input 
-            id="login" 
-            type="text"
-            value={login}
-            onChange={this.onChangeHandler} 
-          /> <br />
-          <label htmlFor="password">password</label><br/>
-          <input 
-            id="password" 
-            type="text" 
-            value={password}            
-            onChange={this.onChangeHandler}  
-          /> <br />
-          <button onClick={this.userLogin} >Войти</button>
-        </div>
+        <Form className="loginForm">
+          <p className="form__title">
+            Login
+          </p>
+          <Form.Item>
+            <Input
+              id='login'
+              size={'large'}
+              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="Логин"
+              value={login}
+              onChange={this.onChangeHandler}  
+            />
+          </Form.Item>
+          <Form.Item>
+            <Input
+              id='password'
+              size={'large'}
+              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              type="password"
+              placeholder="Пароль"
+              value={password}
+              onChange={this.onChangeHandler}  
+            />
+          </Form.Item>
+          <Form.Item>
+            <span style={{ color : serverMessage.status === "success" ? 'green' : 'red' }}>{serverMessage.text}</span> 
+          </Form.Item>
+          <Button 
+            size="large" 
+            onClick={this.userLogin} 
+            type="primary" 
+            className="login-form-button"
+          >
+            Вход
+          </Button>
+        </Form>
       )
     }
 }

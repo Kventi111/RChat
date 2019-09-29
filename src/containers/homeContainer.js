@@ -18,35 +18,6 @@ const socket = openSocket("https://immense-everglades-27398.herokuapp.com");
 //   this.props.updateMessages(message);
 // }
 
-// async function fetchMessagesById(id) {
-//   const { dialogList } = this.props.Application;
-
-//   const currrentUser = dialogList.find(i => i._id === id);
-
-//   this.setState({
-//     currentDialogId: id,
-//     currentDialogUser: currrentUser.partner
-//   });
-
-//   socket.emit("DIALOGS:JOIN", id);
-
-//   let response;
-//   if (id) {
-//     response = await API.MESSAGES.getMessages(id);
-//     this.props.fetchMessages(response);
-//   }
-
-//   setTimeout(() => {
-//     const messagesList = this.myRef.current;
-
-//     messagesList.scrollTo({
-//       top: 999999999,
-//       left: 0,
-//       behavior: "smooth"
-//     });
-//   }, 100);
-// }
-
 // async function getTextAreaValue(e) {
 //   const { value } = e.target;
 
@@ -80,6 +51,48 @@ const socket = openSocket("https://immense-everglades-27398.herokuapp.com");
 
 
 class HomeContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      currentDialogId : '',
+      currentDialogUser : ''
+    }
+  }
+
+  fetchMessagesById = async id => {
+    const { 
+      homeContainerState : { 
+        dialogList,
+      } 
+    } = this.props;
+  
+    const currrentUser = dialogList.find(i => i._id === id);
+  
+    this.setState({
+      currentDialogId: id,
+      currentDialogUser: currrentUser.partner
+    });
+  
+    socket.emit("DIALOGS:JOIN", id);
+  
+    let response;
+    if (id) {
+      response = await API.MESSAGES.getMessages(id);
+      this.props.fetchMessages(response);
+    }
+  
+    // setTimeout(() => {
+    //   const messagesList = this.myRef.current;
+  
+    //   messagesList.scrollTo({
+    //     top: 999999999,
+    //     left: 0,
+    //     behavior: "smooth"
+    //   });
+    // }, 100);
+  }
+
   getDialogs = async () => {
     const response = await API.DIALOG.getDialogs();
     this.props.fetchDialogs(response);
@@ -94,14 +107,28 @@ class HomeContainer extends React.Component {
     this.props.mount();
 
     this.getDialogs();
+    this.getUserInfo();
+    this.getUserInfo();
   }
 
   render() {
     const { 
-      homeContainerState : { dialogList } 
+      homeContainerState : { 
+        dialogList,
+        userInfo,
+        messageList
+      } 
     } = this.props;
 
-    return <HomePages dialogList={dialogList} />
+    const {currentDialogUser} = this.state
+
+    return <HomePages 
+      fetchMessagesById={this.fetchMessagesById}
+      currentDialogUser={currentDialogUser}
+      userInfo={userInfo} 
+      dialogList={dialogList} 
+      messageList={messageList} 
+    />
   }
 }
 

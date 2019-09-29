@@ -1,4 +1,4 @@
-import Home from '../containers/HomeContainer'
+import Home from '../containers/homeContainer'
 
 // TODO - Сделать компонент не найденной страницы
 export const secureRoutes = [

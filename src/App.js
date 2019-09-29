@@ -105,9 +105,7 @@ class App extends React.Component {
   fetchMessagesById = async id => {
     const {dialogList} = this.props.Application;
 
-
     const currrentUser = dialogList.find(i => i._id === id)
-
 
     this.setState({
       currentDialogId : id,

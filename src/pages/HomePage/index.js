@@ -1,20 +1,18 @@
 import React,{useReducer, useState} from 'react';
 import {connect} from 'react-redux';
-import ReactDOM from 'react-dom'
+import { Input, Button } from 'antd';
 
-import { Input,Button } from 'antd';
-import { Card, Section, Message, DialogHeader } from './components'
+import { Card, Section, Message, DialogHeader, EmptyState } from 'components'
+    
+import * as actions from 'actions/application'  
+import * as userActions from 'actions/userAction'
+import * as dialogsActions from 'actions/dialogActions'
+import * as messagesActions from 'actions/messageActions'
 
-import * as actions from './actions/application'
-import * as userActions from './actions/userAction'
-import * as dialogsActions from './actions/dialogActions'
-import * as messagesActions from './actions/messageActions'
-
-import { API } from './api'
-import sadFrank from './icons/sadFrank.svg'
+import { API } from 'api'
+import { ICONS } from 'assets/icons'
 
 import openSocket from 'socket.io-client';
-
 
 import {
   Wrapper,
@@ -34,30 +32,11 @@ import './App.css'
 const socket = openSocket('https://immense-everglades-27398.herokuapp.com');
 
 const { TextArea, Search } = Input;
+
 const url = 'https://images.unsplash.com/photo-1563494270-4e133aea0ede?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=582&q=80'
 
 
-function EmptyState({text,subtitle}) {
-  const style ={
-    display : "flex",
-    justifyContent : 'center',
-    alignItems : 'center',
-    flexDirection : 'column',
-    height : "100%",
-    width: "100%",
-    backgroundColor : '#b1afaf1a'
-  }
-
-  return (
-    <div style={style}>
-      <p className="emptyStateTitle"> {text} </p>
-      {subtitle && <small>{subtitle}</small>}
-      <img src={sadFrank} className="sanFrank" alt={'icon'} />
-    </div>
-  )
-} 
-
-class App extends React.Component {
+class HomePage extends React.Component {
   constructor(props) {
     super(props)
 
@@ -240,4 +219,4 @@ const mapDispatchToProps = {
   ...messagesActions
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(App);
+export default connect(mapStateToProps,mapDispatchToProps)(HomePage);

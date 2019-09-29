@@ -1,4 +1,4 @@
-import App from '../App'
+import Home from '../pages/HomePage'
 
 // TODO - Сделать компонент не найденной страницы
 export const secureRoutes = [
@@ -6,7 +6,7 @@ export const secureRoutes = [
     exact: true,
     path: '/home',
     title: 'Главная',
-    component: App,
+    component: Home,
     service: null,
   },
   {

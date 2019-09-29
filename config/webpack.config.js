@@ -274,7 +274,7 @@ module.exports = function(webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ['node_modules', paths.appNodeModules].concat(
+      modules: ['node_modules', path.resolve('./src')].concat(
         modules.additionalModulePaths || []
       ),
       // These are the reasonable defaults supported by the Node ecosystem.
@@ -289,8 +289,7 @@ module.exports = function(webpackEnv) {
       alias: {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-        'react-native': 'react-native-web',
-        constants : path.resolve(__dirname,'src/constants')
+        'react-native': 'react-native-web'
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding

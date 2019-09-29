@@ -1,18 +1,9 @@
-import React,{useReducer, useState} from 'react';
-import {connect} from 'react-redux';
-import { Input, Button } from 'antd';
+import React from "react";
+import { Input, Button } from "antd";
 
-import { Card, Section, Message, DialogHeader, EmptyState } from 'components'
-    
-import * as actions from 'actions/application'  
-import * as userActions from 'actions/userAction'
-import * as dialogsActions from 'actions/dialogActions'
-import * as messagesActions from 'actions/messageActions'
+import { Card, Section, Message, DialogHeader, EmptyState } from "components";
 
-import { API } from 'api'
-import { ICONS } from 'assets/icons'
-
-import openSocket from 'socket.io-client';
+import openSocket from "socket.io-client";
 
 import {
   Wrapper,
@@ -24,135 +15,25 @@ import {
   DialogMessages,
   DialogWindowControl,
   MessageItem,
-  SearchWrapper,
-} from './style'
+  SearchWrapper
+} from "./style";
 
-import './App.css'
-
-const socket = openSocket('https://immense-everglades-27398.herokuapp.com');
+import "./App.css";
 
 const { TextArea, Search } = Input;
 
-const url = 'https://images.unsplash.com/photo-1563494270-4e133aea0ede?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=582&q=80'
-
+const url =
+  "https://images.unsplash.com/photo-1563494270-4e133aea0ede?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=582&q=80";
 
 class HomePage extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.myRef = React.createRef();
-
-    this.state = {
-      messageText : '',
-      currentDialogId :  null,
-      currentDialogUser : null 
-    }
-  }
-
-  componentDidMount() {
-    this.props.mount()
-
-    socket.on("DIALOGS:SUCCESS", socket => console.log(socket));
-    socket.on("NEW:MESSAGE", this.updateMessages);
-
-    this.getUserInfo()
-    this.getDialogs()
-  }
-
-  updateMessages = message => {
-    console.log(message)
-    this.props.updateMessages(message)
-  }
-
-  getUserInfo = async () => {
-    const response = await API.USER.getMe();
-    this.props.fetchUserInfo(response);
-  }
-
-  getDialogs = async () => {
-    const response = await API.DIALOG.getDialogs();
-    this.props.fetchDialogs(response);
-  }
-
-  componentWillUnmount() {
-
-    socket.removeListener("DIALOGS:SUCCESS", () => console.log('test'));
-    socket.removeListener("NEW:MESSAGE", socket => console.log(socket));
-  }
-
-
-  fetchMessagesById = async id => {
-    const {dialogList} = this.props.Application;
-
-    const currrentUser = dialogList.find(i => i._id === id)
-
-    this.setState({
-      currentDialogId : id,
-      currentDialogUser : currrentUser.partner
-    })
-
-    socket.emit("DIALOGS:JOIN", id);
-
-    let response;
-    if (id) {
-      response = await API.MESSAGES.getMessages(id)
-      this.props.fetchMessages(response)
-    }
-
-    setTimeout(() => {
-      const messagesList = this.myRef.current;
-
-      messagesList.scrollTo({
-        top :  999999999,
-        left : 0,
-        behavior: 'smooth'
-      })
-    },100)
-  }
-
-  getTextAreaValue = e => {
-    const {value} = e.target
-
-    if(value.trim().length) {
-      this.setState({
-        messageText : value,
-       })
-    }
-  }
-
-  sendMessage = async () => {
-    const messagesList = this.myRef.current;
-
-    if (this.state.messageText) {
-      socket.emit("MESSAGE",this.state.messageText)
-    }
-
-    const data = {
-      dialog : this.state.currentDialogId,
-      text : this.state.messageText
-    }
-
-
-    await API.MESSAGES.sendMessage(data)
-
-    messagesList.scrollTo({
-      top :  999999999,
-      left : 0,
-      behavior: 'smooth'
-    });
-  }
-
-
   render() {
-    const {loading, userInfo, dialogList, messageList} = this.props.Application;    
-    const { currentDialogUser } = this.state
-
-    return ( 
+    const { dialogList } = this.props;
+    return (
       <Wrapper>
         <Content>
           <Header>
             <Section width={60}>
-              <SearchWrapper>
+              <SearchWrapper>    
                 <Search
                   placeholder="input search text"
                   onSearch={value => console.log(value)}
@@ -160,32 +41,34 @@ class HomePage extends React.Component {
               </SearchWrapper>
             </Section>
             <Section>
-              {currentDialogUser && <DialogHeader userInfo={currentDialogUser} />}
+              {/* {currentDialogUser && <DialogHeader userInfo={currentDialogUser} />} */}
             </Section>
           </Header>
           <DialogWrapper>
             <DialogList>
-              {dialogList.length ? dialogList.map(item => (
-                <Card 
-                  key={item._id}
-                  imgSrc={url}
-                  userName={item.partner.fullname}
-                  lastUpdate={'14:00'}
-                  lastMessage={item.lastMessage.text}
-                  onClick={() => this.fetchMessagesById(item._id)}
+              {dialogList.length ? (
+                dialogList.map(item => (
+                  <Card
+                    key={item._id}
+                    imgSrc={url}
+                    userName={item.partner.fullname}
+                    lastUpdate={"14:00"}
+                    lastMessage={item.lastMessage.text}
+                    onClick={() => this.fetchMessagesById(item._id)}
+                  />
+                ))
+              ) : (
+                <EmptyState
+                  text={"Создайте диалог"}
+                  subtitle={"не злите фрэнка :)"}
                 />
-              )) : <EmptyState text={"Создайте диалог"} subtitle={'не злите фрэнка :)'} />}
+              )}
             </DialogList>
-            <DialogWindow>
+            {/* <DialogWindow>
               {messageList.length 
                ?  
                <React.Fragment>
                   <DialogMessages ref={this.myRef}>
-                      {/* {Array.from({ length: 50 }, (v, k) => k).map(item => (
-                        <Message key={item} me={item % 2 === 0}>
-                          {item}
-                        </Message>
-                      ))} */}
                       {messageList.map(item => (
                         <Message key={item._id} me={userInfo._id === item.user}>
                           {item.text}
@@ -202,7 +85,7 @@ class HomePage extends React.Component {
                   </DialogWindowControl>
                 </React.Fragment>
                : <EmptyState text={"Выбери диалог"} subtitle={'фрэнк думает, что ты интроверт :)'} />}
-            </DialogWindow>
+            </DialogWindow> */}
           </DialogWrapper>
         </Content>
       </Wrapper>
@@ -210,13 +93,4 @@ class HomePage extends React.Component {
   }
 }
 
-
-const mapStateToProps = state => ({ ...state })
-const mapDispatchToProps = {
-  ...actions,
-  ...userActions,
-  ...dialogsActions,
-  ...messagesActions
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(HomePage);
+export default HomePage;

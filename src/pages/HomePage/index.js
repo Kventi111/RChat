@@ -1,35 +1,24 @@
 import React from "react";
-import { Input, Button } from "antd";
+import { Input } from "antd";
 
 import {
-  Card,
   Section,
-  Message,
   DialogHeader,
   DialogList,
   MesasageList
 } from "components";
-
-import openSocket from "socket.io-client";
 
 import {
   Wrapper,
   Content,
   Header,
   DialogWrapper,
-  DialogWindow,
-  DialogMessages,
-  DialogWindowControl,
-  MessageItem,
   SearchWrapper
 } from "./style";
 
 import "./App.css";
 
-const { TextArea, Search } = Input;
-
-const url =
-  "https://images.unsplash.com/photo-1563494270-4e133aea0ede?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=582&q=80";
+const { Search } = Input;
 
 class HomePage extends React.Component {
   render() {
@@ -38,7 +27,9 @@ class HomePage extends React.Component {
       userInfo,
       fetchMessagesById,
       messageList,
-      currentDialogUser
+      currentDialogUser,
+      sendMessage,
+      updateMessages
     } = this.props;
     return (
       <Wrapper>
@@ -63,7 +54,7 @@ class HomePage extends React.Component {
               fetchMessagesById={fetchMessagesById}
               list={dialogList}
             />
-            <MesasageList list={messageList} userId={userInfo._id} />
+            <MesasageList updateMessages={updateMessages} sendMessage={sendMessage} list={messageList} userId={userInfo._id} />
           </DialogWrapper>
         </Content>
       </Wrapper>

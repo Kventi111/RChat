@@ -13,10 +13,7 @@ import HomePages from "../pages/HomePage";
 import openSocket from "socket.io-client";
 const socket = openSocket("https://immense-everglades-27398.herokuapp.com");
 
-// async function updateMessages(message) {
-//   console.log(message);
-//   this.props.updateMessages(message);
-// }
+
 
 // async function getTextAreaValue(e) {
 //   const { value } = e.target;
@@ -26,27 +23,6 @@ const socket = openSocket("https://immense-everglades-27398.herokuapp.com");
 //       messageText: value
 //     });
 //   }
-// }
-
-// async function sendMessage() {
-//   const messagesList = this.myRef.current;
-
-//   if (this.state.messageText) {
-//     socket.emit("MESSAGE", this.state.messageText);
-//   }
-
-//   const data = {
-//     dialog: this.state.currentDialogId,
-//     text: this.state.messageText
-//   };
-
-//   await API.MESSAGES.sendMessage(data);
-
-//   messagesList.scrollTo({
-//     top: 999999999,
-//     left: 0,
-//     behavior: "smooth"
-//   });
 // }
 
 
@@ -93,6 +69,25 @@ class HomeContainer extends React.Component {
     // }, 100);
   }
 
+  updateMessages = async (message) => {
+    this.props.updateMessages(message);
+  }
+
+
+  sendMessage = async text => {
+  
+    if (text) {
+      socket.emit("MESSAGE", this.state.messageText);
+    }
+
+    const data = {
+      dialog: this.state.currentDialogId,
+      text: text
+    };
+
+    await API.MESSAGES.sendMessage(data);
+  }
+
   getDialogs = async () => {
     const response = await API.DIALOG.getDialogs();
     this.props.fetchDialogs(response);
@@ -125,6 +120,8 @@ class HomeContainer extends React.Component {
     return <HomePages 
       fetchMessagesById={this.fetchMessagesById}
       currentDialogUser={currentDialogUser}
+      sendMessage={this.sendMessage}
+      updateMessages={this.updateMessages}
       userInfo={userInfo} 
       dialogList={dialogList} 
       messageList={messageList} 

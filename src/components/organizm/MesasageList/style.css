@@ -1,0 +1,12 @@
+
+
+.dialogControl {
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+.ant-input:hover {
+  border-color: none;
+  border-right-width: none;
+}

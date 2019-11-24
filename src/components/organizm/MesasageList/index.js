@@ -16,11 +16,23 @@ import {
   SearchWrapper
 } from "./style";
 
+import './style.css'
+
 const { TextArea } = Input;
 
 class HomePage extends React.Component {
+  onPressHandler = e => {
+
+    if (e.keyCode === 13 && !e.shiftKey) {
+      e.preventDefault()
+      
+      this.props.sendMessage(e.target.value)
+      this.props.updateMessages(e.target.value)
+    }
+
+  }
   render() {
-    const { list, userId } = this.props;
+    const { list, userId, sendMessage } = this.props;
     return (
       <DialogWindow>
         {list.length ? (
@@ -33,7 +45,7 @@ class HomePage extends React.Component {
               ))}
             </DialogMessages>
             <DialogWindowControl>
-              <TextArea />
+              <TextArea onPressEnter={this.onPressHandler} autosize placeholder="Введите сообщение" className="dialogControl" />
             </DialogWindowControl>
           </React.Fragment>
         ) : (

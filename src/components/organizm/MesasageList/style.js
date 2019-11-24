@@ -86,6 +86,5 @@ export const DialogWindowControl = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 10px;
-  border-top: 1px solid rgba(0,0,0,.08);  
+  padding: 10px 5px;
 `;
